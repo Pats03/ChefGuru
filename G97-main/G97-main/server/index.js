@@ -3,11 +3,13 @@ const bcrypt= require("bcrypt");
 const jwt = require("jsonwebtoken");
 require('dotenv').config()
 const { default: mongoose } = require("mongoose");
+
 const app = express();
 const port=process.env.PORT;
 
 const {_,user} = require("./schema/schema");
 const routes = require("./routes/routes");
+const admin = require("./routes/admin_routes");
 
 app.use(express.json())
 
@@ -82,7 +84,7 @@ app.post('/login',async(req,res)=>{
 })
 
 app.use('/v2',auth,routes);
-
+app.use('/v3',auth,admin);
 async function auth (req, res, next){
     var token = req.header('Authorization');
     if (!token) return res.status(401).json({erroe:true, msg: 'unauthorized' });
